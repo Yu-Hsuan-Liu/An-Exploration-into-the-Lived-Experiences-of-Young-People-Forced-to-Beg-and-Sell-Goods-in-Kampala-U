@@ -1,0 +1,172 @@
+---
+title: "Human_Trafficking_Indentifier"
+author: "Yu-Hsuan Liu"
+date: "3/26/2021"
+output: pdf_document
+---
+```{r}
+library(dplyr)
+library(tidyverse)
+```
+
+```{r}
+data <- read.csv("your_survey_file.csv")
+head(data)
+```
+
+```{r}
+#Set the first identifier of (Q33(No) + Q35(Yes)) + Q37
+#Get True/False value from Q37
+
+#Denote a column nameed Q37_value to restore T/F value of Q37
+data$Q37_value <- FALSE
+#Write a loop to match each value in Q37 and if it contains our regex texts,
+#It will return TRUE and restored to Q37_value
+
+for (i in 1:length(data$Q37)){
+  if (TRUE %in% str_detect(data$Q37[i], regex(c("Physical violence.*",  #1
+                                     "Physically restrained.*", #2
+                                     "Deprived of.*", #3
+                                     "Sexual violence.*", #4
+                                     "Emotional violence.*", #5
+                                     "Harm to a family member.*", #6
+                                     "Legal action.*", #7
+                                     "Withholding of ID cards.*", #8
+                                     "Confiscation of savings or other valuables.*", #10
+                                     "Too far from the home and nowhere to go.*", #11
+                                     "Kept drunk.*", #12
+                                     "Restrictions in communication.*" #14
+  ), ignore_case = TRUE)) == TRUE){
+    data$Q37_value[i] = TRUE}
+}
+
+
+#First denote Trafficked column as 0
+data$Trafficked = 0
+
+#Assigned qualified conditions as 1 in Trafficked
+data$Trafficked[(data$Q33 == regex("No", ignore_case = TRUE) &  
+                  data$Q35 == regex("Yes", ignore_case = TRUE) & 
+                   data$Q37_value == TRUE)] = 1
+
+```
+
+
+```{r}
+#Set the second identifier of Q54(No) + Q55
+#Get True/False value from Q55
+
+#Denote a column names Q55_value to restore T/F value of Q55
+data$Q55_value <- FALSE
+#Write a loop to match each value in Q55 and if it contains our regex texts,
+#It will return TRUE and restored to Q55_value
+
+for (i in 1:length(data$Q55)){
+  if (TRUE  %in% str_detect(data$Q55[i], 
+                             regex(c("Physical violence.*",  #1
+                                     "Physically restrained.*", #2
+                                     "Deprived of.*", #3
+                                     "Sexual violence.*", #4
+                                     "Emotional violence.*", #5
+                                     "Harm to family.*", #6
+                                     "Legal action.*", #7
+                                     "Withholding of ID cards.*", #8
+                                     "Confiscation of savings or other valuables.*", #20
+                                     "Too far from the home and nowhere to go.*", #10
+                                     "Alcohol use.*", #22
+                                     "Other drug use.*" #23
+                                     ), ignore_case = TRUE)) == TRUE){
+    data$Q55_value[i] = TRUE}
+}
+
+#Assigned qualified conditions as 1 in Trafficked
+data$Trafficked[(data$Q54 == regex("No", ignore_case = TRUE) &  
+                   data$Q55_value == TRUE)] = 1
+```
+
+
+```{r}
+#Set the second identifier of Q57(Yes) + Q58
+#Get True/False value from Q58
+
+#Denote a column names Q58_value to restore T/F value of Q58
+data$Q58_value <- FALSE
+#Write a loop to match each value in Q58 and if it contains our regex texts,
+#It will return TRUE and restored to Q58_value
+
+for (i in 1:length(data$Q58)){
+  if (TRUE  %in% str_detect(data$Q58[i], 
+                             regex(c("Physical violence.*",  #1
+                                     "Physically restrained.*", #2
+                                     "Deprived of.*", #3
+                                     "Sexual violence.*", #4
+                                     "Emotional violence.*", #5
+                                     "Harm to family.*", #6
+                                     "Legal action.*", #7
+                                     "Withholding of ID cards.*", #8
+                                     "Confiscation of savings or other valuables.*", #17
+                                     "Too far from the home and nowhere to go.*", #10
+                                     "Alcohol use.*", #11
+                                     "Other drug use.*" #19
+                                     ), ignore_case = TRUE)) == TRUE){
+    data$Q58_value[i] = TRUE}
+}
+
+#Assigned qualified conditions as 1 in Trafficked
+data$Trafficked[((data$Q57.1_1 == regex("Yes", ignore_case = TRUE) | 
+                   data$Q57.1_2 == regex("Yes", ignore_case = TRUE) |
+                   data$Q57.1_3 == regex("Yes", ignore_case = TRUE) |
+                   data$Q57.1_4 == regex("Yes", ignore_case = TRUE) |
+                   data$Q57.1_5 == regex("Yes", ignore_case = TRUE)) &
+                   data$Q58_value == TRUE)] = 1
+```
+
+
+```{r}
+#Set the second identifier of Q59(Yes) + Q61
+#Get True/False value from Q61
+
+#Denote a column names Q61_value to restore T/F value of Q61
+data$Q61_value <- FALSE
+#Write a loop to match each value in Q61 and if it contains our regex texts,
+#It will return TRUE and restored to Q61_value
+
+for (i in 1:length(data$Q61)){
+  if (TRUE  %in% str_detect(data$Q61[i], 
+                             regex(c("Physical violence.*",  #1
+                                     "Physically restrained.*", #2
+                                     "Deprived of.*", #3
+                                     "Sexual violence.*", #4
+                                     "Emotional violence.*", #5
+                                     "Harm to family.*", #6
+                                     "Legal action.*", #7
+                                     "Withholding of ID cards.*", #8
+                                     "Confiscation of savings or other valuables.*", #17
+                                     "Too far from the home and nowhere to go.*", #10
+                                     "To service/feed an addiction to alcohol/drugs.*", #11
+                                     "I had given birth and the exploiter was the father.*" #21
+                                     ), ignore_case = TRUE)) == TRUE){
+    data$Q61_value[i] = TRUE}
+}
+
+#Assigned qualified conditions as 1 in Trafficked
+data$Trafficked[((data$Q59.1_1 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_2 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_3 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_4 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_5 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_6 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_7 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_8 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_9 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_10 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_11 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_12 == regex("Yes", ignore_case = TRUE) |
+                   data$Q59.1_13 == regex("Yes", ignore_case = TRUE)) &
+                   data$Q61_value == TRUE)] = 1
+```
+
+```{r}
+write.csv(data, "your_saved_file.csv")
+```
+
