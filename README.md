@@ -1,1 +1,2 @@
 # Human-Trafficking-Identifier
+The definitions of child sex, adult sex, and labor trafficking are different. To filter out the possible human trafficking victims, there are several threshold answers to be considered in the survey. This is an example how can we utilize regex to filter out certain answers in a survey to identify human trafficking victims. (All sensitive data have been removed from the file.)
